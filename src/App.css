@@ -15,11 +15,12 @@
 
 body {
   background-color: var(--swatch-foundation);
+  font-family: 'Tangerine';
+
 }
 
 #root {
   background-color: var(--swatch-primary);
-  font-family: serif;
   position: absolute;
   width: 80%;
   left: 10%;
@@ -39,6 +40,8 @@ body {
   -song-cards
   -statusbar
  */
+
+ 
 
  #banner {
   grid-column: 1 / 3;
@@ -109,10 +112,10 @@ body {
 }
 
 .playlist-card, .selected-playlist-card, .unselected-playlist-card {
-  font-size: 18pt;
+  font-size: 24pt;
   margin: 10px;
-  padding: 20px;
-  border-radius: 25px;
+  padding: 10px;
+  border-radius: 125px;
 }
 
 .unselected-playlist-card:hover {
@@ -121,9 +124,32 @@ body {
   color:white;
 }
 
+.song-card, .selected-song-card, .unselected-song-card {
+  font-size: 24pt;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 125px;
+}
+
+.selected-song-card {
+  background-color: var(--swatch-accent);
+  color: var(--swatch-contrast);
+}
+
+.unselected-song-card {
+  background-color: var(--swatch-complement);
+}
+
+.unselected-song-card:hover {
+  cursor: pointer;
+  background-color: var(--swatch-contrast);
+  color: white;
+}
+
+
 .selected-playlist-card {
   background-color: var(--swatch-accent);
-  color: white;
+  color: var(--swatch-contrast);
 }
 
 .unselected-playlist-card {
@@ -185,7 +211,7 @@ input {
 }
 
 .modal-root {
-  position: relative;
+  font-family: 'Tangerine';
   max-width: 1200vw;
   max-height: 600vh;
   overflow: visible;
@@ -357,3 +383,4 @@ span {
     transform: rotate(0deg);
   }
 }
+

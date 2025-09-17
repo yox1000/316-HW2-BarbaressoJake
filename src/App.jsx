@@ -124,6 +124,45 @@ class App extends React.Component {
             this.db.mutationUpdateSessionData(this.state.sessionData);
         });
     }
+
+    duplicateList = (keyPair) => {
+        // get original list that we're duplicating from the datbase
+        let originalList = this.db.queryGetList(keyPair.key);
+
+        // create key and name for the new (duplicated) list
+        let newKey = this.state.sessionData.nextKey;
+        let newName = originalList.name + " (Copy)";
+
+        // Duplicate list with songs
+        let newList = {
+            key: newKey,
+            name: newName,
+            songs: [...originalList.songs] // shallow copy of songs
+        };
+
+        // Create new keyNamePair
+        let newKeyNamePair = { key: newKey, name: newName };
+
+        let updatedPairs = [...this.state.sessionData.keyNamePairs, newKeyNamePair];
+        this.sortKeyNamePairsByName(updatedPairs);
+
+        // Update the database and the state
+        this.setState(prevState => ({
+            listKeyPairMarkedForDeletion: prevState.listKeyPairMarkedForDeletion,
+            currentList: newList,
+            sessionData: {
+                nextKey: prevState.sessionData.nextKey + 1,
+                counter: prevState.sessionData.counter + 1,
+                keyNamePairs: updatedPairs
+            }
+        }), () => {
+            this.db.mutationCreateList(newList);
+            this.db.mutationUpdateSessionData(this.state.sessionData);
+        });
+    }
+
+
+
     deleteMarkedList = () => {
         this.deleteList(this.state.listKeyPairMarkedForDeletion.key);
         this.hideDeleteListModal();
@@ -134,6 +173,7 @@ class App extends React.Component {
             this.deleteList(this.state.currentList.key);
         }
     }
+
     renameList = (key, newName) => {
         let newKeyNamePairs = [...this.state.sessionData.keyNamePairs];
         // NOW GO THROUGH THE ARRAY AND FIND THE ONE TO RENAME
@@ -289,6 +329,7 @@ class App extends React.Component {
                     currentList={this.state.currentList}
                     keyNamePairs={this.state.sessionData.keyNamePairs}
                     deleteListCallback={this.markListForDeletion}
+                    duplicateListCallback={this.duplicateList}
                     loadListCallback={this.loadList}
                     renameListCallback={this.renameList}
                 />

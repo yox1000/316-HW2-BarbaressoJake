@@ -28,6 +28,10 @@ export default class PlaylistCard extends React.Component {
         event.stopPropagation();
         this.props.deleteListCallback(this.props.keyNamePair);
     }
+    handleDuplicateList = (event) => {
+        event.stopPropagation();
+        this.props.duplicateListCallback(this.props.keyNamePair);
+    }
     handleToggleEdit = (event) => {
         this.setState({
             editActive: !this.state.editActive
@@ -87,7 +91,13 @@ export default class PlaylistCard extends React.Component {
                         id={"delete-list-" + keyNamePair.key}
                         className="card-button"
                         onClick={this.handleDeleteList}
-                        value={"\u2715"} />
+                        value={"🗑"} />
+                    <input
+                        type="button"
+                        id={"duplicate-list-" + keyNamePair.key}
+                        className="card-button"
+                        onClick={this.handleDuplicateList}
+                        value={"⎘"} />
                 </div>
             );
         }

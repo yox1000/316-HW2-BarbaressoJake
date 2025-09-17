@@ -6,8 +6,10 @@ export default class PlaylistCards extends React.Component {
         const { currentList,
                 keyNamePairs,
                 deleteListCallback, 
+                duplicateListCallback,
                 loadListCallback,
-                renameListCallback} = this.props;
+                renameListCallback, 
+                } = this.props;
         return (
             <div id="playlist-cards">
                 {
@@ -17,6 +19,7 @@ export default class PlaylistCards extends React.Component {
                             keyNamePair={pair}
                             selected={(currentList !== null) && (currentList.key === pair.key)}
                             deleteListCallback={deleteListCallback}
+                            duplicateListCallback={duplicateListCallback}
                             loadListCallback={loadListCallback}
                             renameListCallback={renameListCallback}
                         />
