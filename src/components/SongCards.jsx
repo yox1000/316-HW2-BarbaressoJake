@@ -4,7 +4,7 @@ import React from "react";
 export default class SongCards extends React.Component {
     render() {
         const { currentList, 
-                moveSongCallback, showEditSongModalCallback, removeSongCallback} = this.props;
+                moveSongCallback, showEditSongModalCallback, removeSongCallback, duplicateSongCallback} = this.props;
         if (currentList === null) {
             return (
                 <div id="song-cards"></div>
@@ -22,6 +22,7 @@ export default class SongCards extends React.Component {
                                 moveCallback={moveSongCallback}
                                 showEditSongModalCallback={showEditSongModalCallback} //forward callback from app.jsx
                                 removeSongCallback={(songIndex, songObj) => removeSongCallback(songIndex, songObj)}
+                                duplicateSongCallback={(songIndex, songObj) => duplicateSongCallback(songIndex, songObj)}
                             />
                         ))
                     }

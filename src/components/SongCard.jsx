@@ -84,6 +84,15 @@ export default class SongCard extends React.Component {
                 <span className="song-artist">{song.artist}</span>{" "}
 
                 <button
+                    className="duplicate-song-button"
+                    onClick={(e) => {
+                        e.stopPropagation(); // avoid doubleclick
+                        this.props.duplicateSongCallback(num - 1, song); 
+                    }}
+                > ⎘
+                </button>
+
+                <button
                     className="remove-song-button"
                     onClick={(e) => {
                         e.stopPropagation(); // avoid doubleclick
