@@ -11,6 +11,7 @@
   --swatch-accent: #669966; 
   --swatch-status: #123456;
   --swatch-link-contrast:lightgreen;
+  --swatch-link-emphasis: #b88320;
   --bounceEasing: cubic-bezier(0.51, 0.92, 0.24, 1.15);
 }
 
@@ -131,8 +132,11 @@ body {
   font-size: 24pt;
   margin: 10px;
   padding: 10px;
-  border-radius: 125px;
+  border-radius: 20px; /* less bubble-like */
   background-color: var(--swatch-complement);
+  display: flex;
+  gap: 8px;       /* adds spacing between spans */
+  align-items: baseline;
 }
 
 .selected-song-card {
@@ -140,18 +144,54 @@ body {
   color: var(--swatch-contrast);
 }
 
-
 .unselected-song-card {
   background-color: var(--swatch-foundation);
 }
 
-.unselected-song-card:hover {
+.unselected-song-card:hover,
+.song-card:hover {
   cursor: pointer;
-  background-color: var(--swatch-contrast);
-  color: white;
+  background-color: var(--swatch-contrast); 
 }
 
+/* Hover text styles */
+.song-card:hover .song-title {
+  color: var(--swatch-link-contrast); 
+}
 
+.song-card:hover .song-year {
+  color: white; 
+}
+
+.song-card:hover .song-by {
+  color: black; 
+}
+
+.song-card:hover .song-artist {
+  color: red; 
+}
+
+.song-title {
+  color: var(--swatch-link-emphasis);
+  font-weight: normal;
+}
+
+.song-year {
+  color: black;
+  font-weight: bold;
+}
+
+.song-by {
+  color: black;
+  font-weight: normal;
+}
+
+.song-artist {
+  color: red;
+  font-weight: bold;
+}
+
+/* Playlist cards */
 .selected-playlist-card {
   background-color: var(--swatch-accent);
   color: var(--swatch-contrast);
@@ -162,16 +202,16 @@ body {
 }
 
 .card-button, .card-button-disabled {
-  font-size:18pt;
+  font-size: 18pt;
   border-width: 0px;
-  float:right;
+  float: right;
   color: black;
   cursor: pointer;
 }
 
 .card-button:hover {
   cursor: pointer;
-  color:black;
+  color: black;
 }
 
 .card-button-disabled {
@@ -179,17 +219,15 @@ body {
   cursor: not-allowed;
 }
 
+/* Drag highlight */
 .song-card, .song-card-dragged-to { 
-  display:flex;
-  align-items: center;
   font-size: 24pt;
-  height:20%;
+  height: 20%;
 }
 
 input {
-  font-size:20pt;
+  font-size: 20pt;
 }
-
 
 /* THIS STYLE SHEET MANAGES STYLE FOR OUR MODAL, i.e. DIALOG BOX */
 
@@ -217,9 +255,10 @@ input {
 
 .modal-root {
   font-family: 'Tangerine';
-  max-width: 1200vw;
-  max-height: 600vh;
-  overflow: visible;
+  max-width: 90%;
+  width : 400px;
+  max-height: 90%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   background: var(--swatch-complement);

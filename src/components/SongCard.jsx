@@ -76,9 +76,22 @@ export default class SongCard extends React.Component {
                 onDragLeave={this.handleDragLeave}
                 onDrop={this.handleDrop}
                 draggable="true"
+                onDoubleClick={() => this.props.showEditSongModalCallback(song, num)}
             >
-                {song.title} by {song.artist}
+                <span className="song-title">{song.title}</span>{" "}
+                <span className="song-year">({song.year})</span>
+                <span className="song-by"> by </span>{" "}
+                <span className="song-artist">{song.artist}</span>{" "}
+
+                <button
+                    className="remove-song-button"
+                    onClick={(e) => {
+                        e.stopPropagation(); // avoid doubleclick
+                        this.props.removeSongCallback(num - 1, song); 
+                    }}
+                > 🗑
+                </button>
             </div>
-        )
+        );
     }
 }
