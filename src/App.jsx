@@ -46,6 +46,29 @@ class App extends React.Component {
             editingIndex: null
         }
     }
+
+    componentDidMount() {
+        document.addEventListener("keydown", this.handleKeyDown);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.handleKeyDown);
+    }
+
+    handleKeyDown = (event) => {
+        //crtl Z for undo
+        if (event.ctrlKey && event.key === 'z') {
+            //to avoid any browser shortcuts for undo/redo
+            event.preventDefault();
+            this.undo();
+        }
+        //crtl Y for redo
+        if (event.ctrlKey && event.key === 'y') {
+            event.preventDefault();
+            this.redo();
+        }
+    }
+
     sortKeyNamePairsByName = (keyNamePairs) => {
         keyNamePairs.sort((keyPair1, keyPair2) => {
             // GET THE LISTS
@@ -322,7 +345,7 @@ class App extends React.Component {
             title: "Untitled",
             artist: "???",
             year: "???",
-            youtubeId : null
+            youTubeId : null
         };
         // add at end of list
         let index = this.state.currentList.songs.length;
@@ -411,10 +434,14 @@ class App extends React.Component {
     }
 
     render() {
-        let canAddSong = this.state.currentList !== null;
-        let canUndo = this.tps.hasTransactionToUndo();
-        let canRedo = this.tps.hasTransactionToDo();
-        let canClose = this.state.currentList !== null;
+        let inPlaylist = this.state.currentList !== null;
+
+        let canAddSong = inPlaylist;
+        let canClose   = inPlaylist;
+        let canUndo    = inPlaylist && this.tps.hasTransactionToUndo();
+        let canRedo    = inPlaylist && this.tps.hasTransactionToDo();
+
+
         return (
             <div id="root">
                 <Banner />

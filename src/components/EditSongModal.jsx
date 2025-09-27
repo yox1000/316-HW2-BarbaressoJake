@@ -9,7 +9,7 @@ export default class EditSongModal extends Component {
             title: song ? song.title : "",
             artist: song ? song.artist : "",
             year: song ? song.year : "",
-            youtubeId: song ? song.youtubeId : "",
+            youTubeId: song ? song.youTubeId : "",
         };
     }
 
@@ -23,24 +23,24 @@ export default class EditSongModal extends Component {
                 title: this.props.song.title,
                 artist: this.props.song.artist,
                 year: this.props.song.year,
-                youtubeId: this.props.song.youtubeId
+                youTubeId: this.props.song.youTubeId
             });
         }
     }
 
     confirmEdit = () => {
-        const { title, artist, year, youtubeId } = this.state;
+        const { title, artist, year, youTubeId } = this.state;
         this.props.editSongCallback({
             title,
             artist,
             year,
-            youtubeId
+            youTubeId
         });
     }
 
     render() {
         const { hideEditSongModalCallback } = this.props;
-        const { title, artist, year, youtubeId} = this.state;
+        const { title, artist, year, youTubeId} = this.state;
 
         return (
             <div 
@@ -77,8 +77,8 @@ export default class EditSongModal extends Component {
                             <label>Youtube ID:</label>
                             <input 
                                 type="text" 
-                                name="youtubeId" 
-                                value={youtubeId} 
+                                name="youTubeId" 
+                                value={youTubeId} 
                                 onChange={this.handleChange} 
                             />
                         </div>

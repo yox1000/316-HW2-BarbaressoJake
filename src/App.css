@@ -12,6 +12,7 @@
   --swatch-status: #123456;
   --swatch-link-contrast:lightgreen;
   --swatch-link-emphasis: #b88320;
+  --swatch-link-hover:pink;
   --bounceEasing: cubic-bezier(0.51, 0.92, 0.24, 1.15);
 }
 
@@ -174,6 +175,22 @@ body {
 .song-title {
   color: var(--swatch-link-emphasis);
   font-weight: normal;
+}
+
+.song-title-link {
+  color: var(--swatch-link-emphasis);   
+  font-weight: normal;
+  text-decoration: none;                
+}
+
+.song-card:hover .song-title,
+.song-card:hover .song-title-link {
+  color: var(--swatch-link-contrast);   /* green */
+}
+
+.song-card:hover .song-title-link:hover {
+  color: var(--swatch-link-hover);  /* pink */
+  cursor: pointer;
 }
 
 .song-year {

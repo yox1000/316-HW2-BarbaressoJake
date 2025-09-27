@@ -63,9 +63,7 @@ export default class SongCard extends React.Component {
         let num = this.getItemNum();
         console.log("num: " + num);
         let itemClass = "song-card";
-        if (this.state.draggedTo) {
-            itemClass = "song-card-dragged-to";
-        }
+        
         return (
             <div
                 id={'song-' + num}
@@ -78,7 +76,19 @@ export default class SongCard extends React.Component {
                 draggable="true"
                 onDoubleClick={() => this.props.showEditSongModalCallback(song, num)}
             >
-                <span className="song-title">{song.title}</span>{" "}
+                <a href={song.youTubeId ? `https://www.youtube.com/watch?v=${song.youTubeId}` : "#"}
+                    target={song.youTubeId ? "_blank" : undefined}
+                    rel={song.youTubeId ? "noopener noreferrer" : undefined}
+                    className="song-title-link"
+                    onClick={(e) => {
+                        if (!song.youTubeId) {
+                        e.preventDefault(); // prevent click if no youTubeId
+                        }
+                        e.stopPropagation(); // prevent doubleclick edit from firing
+                    }}
+                >
+                    {song.title}
+                </a> {" "}
                 <span className="song-year">({song.year})</span>
                 <span className="song-by"> by </span>{" "}
                 <span className="song-artist">{song.artist}</span>{" "}
