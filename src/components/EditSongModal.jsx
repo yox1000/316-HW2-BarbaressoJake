@@ -47,19 +47,23 @@ export default class EditSongModal extends Component {
                 class="modal" 
                 id="edit-song-modal" 
                 data-animation="slideInOutLeft">
+                
                 <div class="modal-root" id='edit-song-root'>
                     <div class="modal-north">
                         Edit Song
                     </div>
                     <div class="modal-center">
                         <div class="modal-center-content">
-                            <label> Title:</label>
+                            <div className="form-row">
+                            <label>Title:</label>
                             <input 
                                 type="text" 
                                 name="title" 
                                 value={title} 
                                 onChange={this.handleChange} 
                             />
+                            </div>
+                            <div className="form-row">
                             <label>Artist:</label>
                             <input 
                                 type="text" 
@@ -67,6 +71,8 @@ export default class EditSongModal extends Component {
                                 value={artist} 
                                 onChange={this.handleChange} 
                             />
+                            </div>
+                            <div className="form-row">
                             <label>Year:</label>
                             <input 
                                 type="text" 
@@ -74,6 +80,8 @@ export default class EditSongModal extends Component {
                                 value={year} 
                                 onChange={this.handleChange} 
                             />
+                            </div>
+                            <div className="form-row">
                             <label>Youtube ID:</label>
                             <input 
                                 type="text" 
@@ -81,8 +89,10 @@ export default class EditSongModal extends Component {
                                 value={youTubeId} 
                                 onChange={this.handleChange} 
                             />
+                            </div>
                         </div>
-                    </div>
+                        </div>
+
                     <div class="modal-south">
                         <input 
                             type="button" 

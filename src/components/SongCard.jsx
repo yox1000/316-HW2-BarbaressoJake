@@ -9,49 +9,45 @@ export default class SongCard extends React.Component {
             draggedTo: false
         }
     }
+
     handleDragStart = (event) => {
-        event.dataTransfer.setData("song", event.target.id);
-        this.setState(prevState => ({
-            isDragging: true,
-            draggedTo: prevState.draggedTo
-        }));
+        event.dataTransfer.setData("song", "song-" + this.getItemNum());
+        this.setState({ isDragging: true });
     }
+
     handleDragOver = (event) => {
-        event.preventDefault();
-        this.setState(prevState => ({
-            isDragging: prevState.isDragging,
-            draggedTo: true
-        }));
+        event.preventDefault(); // allows to drop
+        this.setState({ draggedTo: true });
     }
+
     handleDragEnter = (event) => {
         event.preventDefault();
-        this.setState(prevState => ({
-            isDragging: prevState.isDragging,
-            draggedTo: true
-        }));
+        this.setState({ draggedTo: true });
     }
+
     handleDragLeave = (event) => {
         event.preventDefault();
-        this.setState(prevState => ({
-            isDragging: prevState.isDragging,
-            draggedTo: false
-        }));
+        this.setState({ draggedTo: false });
     }
+
     handleDrop = (event) => {
         event.preventDefault();
-        let target = event.target;
-        let targetId = target.id;
-        targetId = targetId.substring(target.id.indexOf("-") + 1);
-        let sourceId = event.dataTransfer.getData("song");
-        sourceId = sourceId.substring(sourceId.indexOf("-") + 1);
-        
-        this.setState(prevState => ({
-            isDragging: false,
-            draggedTo: false
-        }));
 
-        // ASK THE MODEL TO MOVE THE DATA
-        this.props.moveCallback(sourceId, targetId);
+        // resolve to closest song-card div
+        const targetCard = event.target.closest(".song-card");
+        if (!targetCard) return;
+
+        let targetId = targetCard.id;     // e.g. "song-3"
+        targetId = targetId.substring("song-".length);
+
+        let sourceId = event.dataTransfer.getData("song"); // e.g. "song-1"
+        sourceId = sourceId.substring("song-".length);
+
+        this.setState({ isDragging: false, draggedTo: false });
+
+        if (sourceId !== targetId) {
+            this.props.moveCallback(sourceId, targetId);
+        }
     }
 
     getItemNum = () => {
@@ -61,12 +57,15 @@ export default class SongCard extends React.Component {
     render() {
         const { song } = this.props;
         let num = this.getItemNum();
-        console.log("num: " + num);
+
         let itemClass = "song-card";
-        
+        if (this.state.draggedTo) {
+            itemClass += " song-card-dragged-to";
+        }
+
         return (
             <div
-                id={'song-' + num}
+                id={"song-" + num}
                 className={itemClass}
                 onDragStart={this.handleDragStart}
                 onDragOver={this.handleDragOver}
@@ -76,40 +75,45 @@ export default class SongCard extends React.Component {
                 draggable="true"
                 onDoubleClick={() => this.props.showEditSongModalCallback(song, num)}
             >
-                <a href={song.youTubeId ? `https://www.youtube.com/watch?v=${song.youTubeId}` : "#"}
+                <span className="song-number">{parseInt(num)}.</span>{" "}
+                <a
+                    href={song.youTubeId ? `https://www.youtube.com/watch?v=${song.youTubeId}` : "#"}
                     target={song.youTubeId ? "_blank" : undefined}
                     rel={song.youTubeId ? "noopener noreferrer" : undefined}
                     className="song-title-link"
                     onClick={(e) => {
                         if (!song.youTubeId) {
-                        e.preventDefault(); // prevent click if no youTubeId
+                            e.preventDefault();
                         }
-                        e.stopPropagation(); // prevent doubleclick edit from firing
+                        e.stopPropagation();
                     }}
                 >
                     {song.title}
-                </a> {" "}
+                </a>{" "}
                 <span className="song-year">({song.year})</span>
                 <span className="song-by"> by </span>{" "}
                 <span className="song-artist">{song.artist}</span>{" "}
-
-                <button
-                    className="duplicate-song-button"
-                    onClick={(e) => {
-                        e.stopPropagation(); // avoid doubleclick
-                        this.props.duplicateSongCallback(num - 1, song); 
-                    }}
-                > ⎘
-                </button>
+                <div className = "song-card-buttons">
 
                 <button
                     className="remove-song-button"
                     onClick={(e) => {
-                        e.stopPropagation(); // avoid doubleclick
-                        this.props.removeSongCallback(num - 1, song); 
+                        e.stopPropagation();
+                        this.props.removeSongCallback(num - 1, song);
                     }}
-                > 🗑
+                >
+                    🗑
                 </button>
+                <button
+                    className="duplicate-song-button"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        this.props.duplicateSongCallback(num - 1, song);
+                    }}
+                >
+                    ⎘
+                </button>
+                </div>
             </div>
         );
     }

@@ -18,6 +18,7 @@ export default class PlaylistCards extends React.Component {
                             key={pair.key}
                             keyNamePair={pair}
                             selected={(currentList !== null) && (currentList.key === pair.key)}
+                            highlightedListKey={this.props.highlightedListKey == pair.key}   
                             deleteListCallback={deleteListCallback}
                             duplicateListCallback={duplicateListCallback}
                             loadListCallback={loadListCallback}

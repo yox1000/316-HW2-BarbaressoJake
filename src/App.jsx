@@ -43,16 +43,19 @@ class App extends React.Component {
             currentList : null,
             sessionData : loadedSessionData,
             editingSong: null,
-            editingIndex: null
+            editingIndex: null,
+            highlightedListKey: null
         }
     }
 
     componentDidMount() {
         document.addEventListener("keydown", this.handleKeyDown);
+        document.addEventListener("click", this.handleGlobalClick);
     }
 
     componentWillUnmount() {
         document.removeEventListener("keydown", this.handleKeyDown);
+        document.removeEventListener("click", this.handleGlobalClick);
     }
 
     handleKeyDown = (event) => {
@@ -69,6 +72,18 @@ class App extends React.Component {
         }
     }
 
+    handleGlobalClick = (event) => {
+        const clickedInsidePlaylist = event.target.closest(".playlist-card");
+        const clickedCreateButton = event.target.closest("#add-playlist-button");
+
+        // Only clear if not clicking on a playlist card or the "new playlist" button
+        if (!clickedInsidePlaylist && !clickedCreateButton) {
+            this.setState({ highlightedListKey: null });
+        }
+    };
+
+
+
     sortKeyNamePairsByName = (keyNamePairs) => {
         keyNamePairs.sort((keyPair1, keyPair2) => {
             // GET THE LISTS
@@ -77,46 +92,43 @@ class App extends React.Component {
     }
     // THIS FUNCTION BEGINS THE PROCESS OF CREATING A NEW LIST
     createNewList = () => {
-        // FIRST FIGURE OUT WHAT THE NEW LIST'S KEY AND NAME WILL BE
         let newKey = this.state.sessionData.nextKey;
-        let newName = "Untitled" + newKey;
+        let newName = "Untitled";
 
-        // MAKE THE NEW LIST
         let newList = {
             key: newKey,
             name: newName,
             songs: []
         };
 
-        // MAKE THE KEY,NAME OBJECT SO WE CAN KEEP IT IN OUR
-        // SESSION DATA SO IT WILL BE IN OUR LIST OF LISTS
-        let newKeyNamePair = { "key": newKey, "name": newName };
+        let newKeyNamePair = { key: newKey, name: newName };
         let updatedPairs = [...this.state.sessionData.keyNamePairs, newKeyNamePair];
         this.sortKeyNamePairsByName(updatedPairs);
 
-        // CHANGE THE APP STATE SO THAT THE CURRENT LIST IS
-        // THIS NEW LIST AND UPDATE THE SESSION DATA SO THAT THE
-        // NEXT LIST CAN BE MADE AS WELL. NOTE, THIS setState WILL
-        // FORCE A CALL TO render, BUT THIS UPDATE IS ASYNCHRONOUS,
-        // SO ANY AFTER EFFECTS THAT NEED TO USE THIS UPDATED STATE
-        // SHOULD BE DONE VIA ITS CALLBACK
         this.setState(prevState => ({
-            listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
-            currentList: newList,
+            listKeyPairMarkedForDeletion: prevState.listKeyPairMarkedForDeletion,
+            currentList: null,              // don’t open it
+            highlightedListKey: newKey,     // highlight instead
             sessionData: {
                 nextKey: prevState.sessionData.nextKey + 1,
                 counter: prevState.sessionData.counter + 1,
                 keyNamePairs: updatedPairs
             }
         }), () => {
-            // PUTTING THIS NEW LIST IN PERMANENT STORAGE
-            // IS AN AFTER EFFECT
             this.db.mutationCreateList(newList);
-
-            // SO IS STORING OUR SESSION DATA
             this.db.mutationUpdateSessionData(this.state.sessionData);
+
         });
+        setTimeout(() => {
+            this.setState({ highlightedListKey: newKey });
+        }, 0);
+
     }
+
+    clearHighlight = () => {
+        this.setState({ highlightedListKey: null });
+    };
+
     // THIS FUNCTION BEGINS THE PROCESS OF DELETING A LIST.
     deleteList = (key) => {
         // IF IT IS THE CURRENT LIST, CHANGE THAT
@@ -447,9 +459,11 @@ class App extends React.Component {
                 <Banner />
                 <SidebarHeading
                     createNewListCallback={this.createNewList}
+                    canAddList={!inPlaylist}
                 />
                 <SidebarList
                     currentList={this.state.currentList}
+                    highlightedListKey={this.state.highlightedListKey}
                     keyNamePairs={this.state.sessionData.keyNamePairs}
                     deleteListCallback={this.markListForDeletion}
                     duplicateListCallback={this.duplicateList}
